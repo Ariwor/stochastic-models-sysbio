@@ -4,6 +4,7 @@
 % after division. It is demonstrated that X follows a binomial distribution (m,p).
 
 %% Set up number of plasmids m and probability p at time of division
+
 m = 10;
 p = 0.6;
 
@@ -14,8 +15,9 @@ u = rand(1,m);
 X = sum(u<p);
 
 %% Compute n = 10000 realizations of X
+tic
 n = 10000;
-X = zeros(1, 10000);
+X = zeros(1,10000);
 for i=1:n
     u = rand(1,m);
     X(i) = sum(u<p);
@@ -33,6 +35,4 @@ pmf_b = binopdf(x,m,p);
 nexttile
 scatter(x,pmf_b,'r');
 title('Probability mass function of the Binomial distribution');
-
-
-
+toc
