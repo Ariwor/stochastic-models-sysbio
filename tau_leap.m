@@ -1,5 +1,5 @@
-% Generate sample paths using the ?-leap method with a fixed
-% time-step ? (tau) for a network with four species and six reactions
+% Generate sample paths using the tau-leap method with a fixed
+% time-step tau for a network with four species and six reactions
 
 function [X_results, jumps] = tau_leap(T_final)
 
