@@ -1,5 +1,11 @@
-%% (B)
+% Analysis of an example gene expression network where the propensity function is not affine (the moment equations are not closed)
+% The network incorporates transcriptional feedback from the protein molecules to enhance mRNA degradation. In other words,
+% the transcription rate is equal to (k_r + g_fb*[protein number])*[mRNA number].
+
+% Two different moment closure methods are employed, Mass Fluctuation Kinetics(MFK) and Separable Derivative Matching(SDM) and
+% are compared with the results obtained from the Stochastic Simulation Algorithm (SSA).
 %% 
+
 % Time interval
 
 tspan = [0 10];
@@ -7,19 +13,22 @@ tspan = [0 10];
 % Initial conditions
 
 y0 = [ 0 0 0 0 0];
-y0_perturbed = y0 + 10^(-3);
+y0_perturbed = y0 + 10^(-3); %Perturb initial values for SDM integration
 
 %% Mass Fluctuation Kinetics(MFK)  
+
 % Integrating the ODEs
 
 [t_1,Y_1] = ode15s(@first_moment_covariance_MFK_ex, tspan, y0);
 
 %% Separable Derivative Matching(SDM)
+
 % Integrating the ODEs
 
 [t_2,Y_2] = ode15s(@first_moment_covariance_SDM_ex, tspan, y0_perturbed);
 
-%% SSA
+%% SSA 
+
 T_final = 10;
 P = 10000; % Number of paths
 mRNA_SSA=zeros(P,length(t_1));
@@ -32,7 +41,9 @@ for k=1:P
         Protein_SSA(k,first_jump_index:end)=X_results(index+1, 2);
     end
 end
+
 %% Moments from SSA
+
 y_SSA=zeros(5,length(t_1));
 for index_SSA=1:length(t_1)
     y_SSA(1,index_SSA) = mean(mRNA_SSA(:,index_SSA));
@@ -44,7 +55,9 @@ for index_SSA=1:length(t_1)
 end
 CV_mRNA_SSA = sqrt(y_SSA(3,:))./y_SSA(1,:);
 CV_Protein_SSA = sqrt(y_SSA(5,:))./y_SSA(2,:);
+
 %% Plotting MFK - SSA
+
 % Plotting
 tiledlayout(3,1)
 
@@ -89,6 +102,7 @@ xlabel('t')
 legend({'y = CV_{mRNA} from MFK','y = CV_{mRNA} from SSA','y = CV_{Protein} from MFK','y = CV_{Protein} from SSA'},'Location','northeast')
 
 %% Plotting SDM - SSA
+
 % Plotting
 tiledlayout(3,1)
 
@@ -132,7 +146,8 @@ title('Coefficient of variation for mRNA and protein copy-numbers from SDM')
 xlabel('t')
 legend({'y = CV_{mRNA} from SDM','y = CV_{mRNA} from SSA','y = CV_{Protein} from SDM','y = CV_{Protein} from SSA'},'Location','northeast')
 
-%% (C)
+%% Estimate coefficients of variation (CV) at stationarity
+
 % CV_mRNA_MFK at stationarity
 CV_mRNA_MFK_ss = CV_mRNA_MFK(end,1);
 

@@ -1,3 +1,7 @@
+% Generate sample paths using the Stochastic Simulation Algorithm (Gillespie’s Direct Method) for an example
+% gene expression network, which incorporates transcriptional feedback from the protein molecules to enhance
+% mRNA degradation. In other words, the transcription rate is equal to (k_r + g_fb*[protein number])*[mRNA number].
+
 function [X_results, jumps] = SSA_Moment_Closure_ex(T_final)
 
 % Initialize
@@ -43,6 +47,6 @@ X = X + S_k(i0,:);
 X_results = [X_results; X];
 jumps=[jumps,t];
 end
-jumps=jumps(1:end-1);
-%X_results(end,:) = [0 0];
+% jumps=jumps(1:end-1);
+% X_results(end,:) = [0 0];
 end
